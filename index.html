@@ -32,7 +32,7 @@
         </p>
       </div>
       <div class="run-status" aria-label="Dashboard status">
-        <strong>5</strong>
+        <strong>6</strong>
         <span>completed jobs</span>
       </div>
     </header>
@@ -117,8 +117,8 @@
                 <li><span>02</span>Angle error</li>
                 <li><span>03</span>Relative distance</li>
                 <li><span>04</span>Newton-step norm</li>
-                <li><span>05</span>Validation accuracy</li>
-                <li><span>06</span>Training loss</li>
+                <li><span>05</span>Task validation</li>
+                <li><span>06</span>Task training</li>
               </ol>
             </aside>
 
@@ -142,6 +142,30 @@
                 class="plot-image"
                 src="assets/plots/optimizer-comparison.png"
                 alt="Six-row optimizer comparison for SGD, AdamW, and Muon"
+              >
+            </article>
+
+            <article class="job-column">
+              <header class="job-header">
+                <div>
+                  <p>Char-GPT · Tiny Shakespeare</p>
+                  <h3>Optimizer comparison</h3>
+                  <span>SGD · AdamW · Muon · perplexity</span>
+                </div>
+                <button
+                  class="expand-button"
+                  type="button"
+                  data-image="assets/plots/shakespeare-optimizer-comparison.png"
+                  data-title="Tiny Shakespeare optimizer comparison"
+                  title="Open full-resolution plot"
+                  aria-label="Open Tiny Shakespeare optimizer comparison plot"
+                >↗</button>
+              </header>
+              <img
+                class="plot-image"
+                src="assets/plots/shakespeare-optimizer-comparison.png"
+                alt="Six-row Tiny Shakespeare char-GPT optimizer comparison with validation and training perplexity"
+                loading="lazy"
               >
             </article>
 

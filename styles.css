@@ -259,7 +259,7 @@ h2 {
 
 .board-grid {
   display: grid;
-  grid-template-columns: 144px repeat(5, var(--column-width));
+  grid-template-columns: 144px repeat(6, var(--column-width));
   align-items: start;
   width: max-content;
   min-height: 100%;
