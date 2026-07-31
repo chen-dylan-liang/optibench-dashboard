@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+      name="description"
+      content="OptiBench remote experiment dashboard for optimizer-to-Newton-step geometry."
+    >
+    <title>OptiBench Remote Runs</title>
+    <link rel="stylesheet" href="styles.css">
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [["\\(", "\\)"], ["$", "$"]] },
+        options: { enableMenu: false }
+      };
+    </script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+    ></script>
+    <script defer src="dashboard.js"></script>
+  </head>
+  <body>
+    <header class="page-header">
+      <div>
+        <p class="eyebrow">Remote experiment dashboard</p>
+        <h1>OptiBench</h1>
+        <p class="summary">
+          Optimizer displacement measured against an estimated Newton step.
+          Every panel below uses the same six-row analysis layout.
+        </p>
+      </div>
+      <div class="run-status" aria-label="Dashboard status">
+        <strong>4</strong>
+        <span>completed jobs</span>
+      </div>
+    </header>
+
+    <main>
+      <section class="geometry" aria-labelledby="geometry-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-index">Metric geometry</p>
+            <h2 id="geometry-title">Three errors from shared primitives</h2>
+          </div>
+          <p class="primitive-key">
+            \(X=\|x^*\|_2\) &nbsp; \(A=\|a\|_2\) &nbsp;
+            \(P=\|\operatorname{Proj}_{a^\perp}(x^*)\|_2\)
+          </p>
+        </div>
+
+        <div class="metric-definitions">
+          <article class="metric-definition scale">
+            <div class="metric-number">01</div>
+            <div>
+              <h3>Scale error</h3>
+              <p class="formula">\(E_{\mathrm{scale}}=\left|\log(A/X)\right|\)</p>
+              <p>Zero means equal lengths; reciprocal ratios have equal error.</p>
+            </div>
+          </article>
+
+          <article class="metric-definition angle">
+            <div class="metric-number">02</div>
+            <div>
+              <h3>Angle error</h3>
+              <p class="formula">
+                <span>\(\theta_0=\arcsin(P/X)\)</span>
+                <span>\(E_{\mathrm{angle}}\in\{\theta_0,\pi-\theta_0\}\)</span>
+              </p>
+              <p>
+                The branch is selected by the estimator's
+                \(-a^\mathsf{T}g\) orientation test.
+              </p>
+            </div>
+          </article>
+
+          <article class="metric-definition distance">
+            <div class="metric-number">03</div>
+            <div>
+              <h3>Distance error</h3>
+              <p class="formula">
+                <span>\(D=\sqrt{X^2+A^2-2XA\cos\theta}\)</span>
+                <span>\(E_{\mathrm{dist}}=D/X\)</span>
+              </p>
+              <p>The CSV records \(D\); the dashboard plots its relative form.</p>
+            </div>
+          </article>
+        </div>
+
+        <p class="orientation-note">
+          \(P/X\) determines the sine magnitude, but not whether the angle is
+          acute or supplementary. The sign test supplies that missing
+          orientation. No tolerance is added to any denominator.
+        </p>
+      </section>
+
+      <section class="dashboard" aria-labelledby="dashboard-title">
+        <div class="dashboard-bar">
+          <div>
+            <p class="section-index">Completed remote jobs</p>
+            <h2 id="dashboard-title">Comparison matrix</h2>
+          </div>
+          <div class="zoom-controls" aria-label="Plot column width">
+            <button id="zoom-out" type="button" title="Narrower columns" aria-label="Narrower columns">−</button>
+            <button id="zoom-reset" type="button" title="Reset column width">1:1</button>
+            <button id="zoom-in" type="button" title="Wider columns" aria-label="Wider columns">+</button>
+          </div>
+        </div>
+
+        <div class="board-scroll" id="board-scroll" tabindex="0">
+          <div class="board-grid" id="board-grid">
+            <aside class="metric-rail" aria-label="Plot rows">
+              <div class="corner-label">Metric rows</div>
+              <ol>
+                <li><span>01</span>Scale error</li>
+                <li><span>02</span>Angle error</li>
+                <li><span>03</span>Relative distance</li>
+                <li><span>04</span>Newton-step norm</li>
+                <li><span>05</span>Validation accuracy</li>
+                <li><span>06</span>Training loss</li>
+              </ol>
+            </aside>
+
+            <article class="job-column">
+              <header class="job-header">
+                <div>
+                  <p>ResNet-18 · CIFAR-10</p>
+                  <h3>Optimizer comparison</h3>
+                  <span>SGD · AdamW · Muon</span>
+                </div>
+                <button
+                  class="expand-button"
+                  type="button"
+                  data-image="assets/plots/optimizer-comparison.png"
+                  data-title="Optimizer comparison"
+                  title="Open full-resolution plot"
+                  aria-label="Open optimizer comparison plot"
+                >↗</button>
+              </header>
+              <img
+                class="plot-image"
+                src="assets/plots/optimizer-comparison.png"
+                alt="Six-row optimizer comparison for SGD, AdamW, and Muon"
+              >
+            </article>
+
+            <article class="job-column">
+              <header class="job-header">
+                <div>
+                  <p>ResNet-18 · CIFAR-10</p>
+                  <h3>Muon momentum</h3>
+                  <span>0.9 · 0.5 · 0.1</span>
+                </div>
+                <button
+                  class="expand-button"
+                  type="button"
+                  data-image="assets/plots/muon-momentum.png"
+                  data-title="Muon momentum ablation"
+                  title="Open full-resolution plot"
+                  aria-label="Open Muon momentum plot"
+                >↗</button>
+              </header>
+              <img
+                class="plot-image"
+                src="assets/plots/muon-momentum.png"
+                alt="Six-row Muon momentum ablation"
+                loading="lazy"
+              >
+            </article>
+
+            <article class="job-column">
+              <header class="job-header">
+                <div>
+                  <p>ResNet-18 · CIFAR-10</p>
+                  <h3>AdamW beta1</h3>
+                  <span>0.9 · 0.5 · 0.1</span>
+                </div>
+                <button
+                  class="expand-button"
+                  type="button"
+                  data-image="assets/plots/adamw-beta1.png"
+                  data-title="AdamW beta1 ablation"
+                  title="Open full-resolution plot"
+                  aria-label="Open AdamW beta1 plot"
+                >↗</button>
+              </header>
+              <img
+                class="plot-image"
+                src="assets/plots/adamw-beta1.png"
+                alt="Six-row AdamW beta1 ablation"
+                loading="lazy"
+              >
+            </article>
+
+            <article class="job-column">
+              <header class="job-header">
+                <div>
+                  <p>ResNet-18 · CIFAR-10</p>
+                  <h3>SGD momentum</h3>
+                  <span>0.9 · 0.5 · 0.1</span>
+                </div>
+                <button
+                  class="expand-button"
+                  type="button"
+                  data-image="assets/plots/sgd-momentum.png"
+                  data-title="SGD momentum ablation"
+                  title="Open full-resolution plot"
+                  aria-label="Open SGD momentum plot"
+                >↗</button>
+              </header>
+              <img
+                class="plot-image"
+                src="assets/plots/sgd-momentum.png"
+                alt="Six-row SGD momentum ablation"
+                loading="lazy"
+              >
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>NE · m=20 · interval=20 · 200 dpi</span>
+      <span>Last dashboard update: 31 July 2026</span>
+    </footer>
+
+    <dialog id="plot-dialog">
+      <div class="dialog-bar">
+        <h2 id="dialog-title">Plot</h2>
+        <button id="dialog-close" type="button" title="Close" aria-label="Close">×</button>
+      </div>
+      <div class="dialog-canvas">
+        <img id="dialog-image" src="" alt="">
+      </div>
+    </dialog>
+  </body>
+</html>
