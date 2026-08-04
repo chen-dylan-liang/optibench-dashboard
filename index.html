@@ -127,7 +127,7 @@
             per step and interval \(d=10\), hence sketch size \(m=20\). Training loss
             is recorded every step, the three geometric measurements every ten steps,
             and validation accuracy once per epoch. The geometric and training curves
-            use an EMA-100 with \(\lambda^{100}=10^{-8}\); validation remains unsmoothed. Scale is
+            use an EMA with \(\lambda=0.95\); validation remains unsmoothed. Scale is
             reported exclusively as \((1-\|a\|_2/\|x^*\|_2)^2\).
           </p>
         </header>
@@ -217,7 +217,7 @@
             momentum changes, leaving the auxiliary AdamW path fixed; for AdamW the
             sweep changes \(\beta_1\) while \(\beta_2=0.999\); for SGD it changes the
             conventional momentum coefficient. SNE again uses \(h=2\), \(d=10\), and
-            \(m=20\), with EMA-100 (\(\lambda^{100}=10^{-8}\)) applied only to geometry and training loss and raw
+            \(m=20\), with EMA (\(\lambda=0.95\)) applied only to geometry and training loss and raw
             validation accuracy retained at one observation per epoch.
           </p>
         </header>
@@ -317,7 +317,7 @@
             step, geometry every five steps, and validation cross-entropy over 200
             batches every 250 steps. The model remains in training mode while an RNG
             snapshot replays the forward-pass dropout realization inside estimator
-            closures. Geometry and training use EMA-100 (\(\lambda^{100}=10^{-8}\)), validation remains raw, and
+            closures. Geometry and training use EMA (\(\lambda=0.95\)), validation remains raw, and
             both task losses are shown as perplexity. Scale error is
             \((1-\|a\|_2/\|x^*\|_2)^2\).
           </p>

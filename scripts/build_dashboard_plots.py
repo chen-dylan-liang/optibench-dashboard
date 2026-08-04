@@ -31,7 +31,7 @@ LANGUAGE_METRICS = (
 )
 MOVING_AVERAGE_TYPES = ("simple", "exponential")
 DEFAULT_MOVING_AVERAGE_TYPE = "exponential"
-DEFAULT_MOVING_AVERAGE_EPSILON = 1.0e-8
+DEFAULT_EMA_LAMBDA = 0.95
 NONNEGATIVE_METRICS = {
     "quadratic_scale_distances",
     "relative_distances",
@@ -275,7 +275,7 @@ def plotted_values(
     *,
     perplexity: bool,
     moving_average_type: str,
-    moving_average_epsilon: float,
+    ema_lambda: float,
 ) -> tuple[float, ...]:
     from optibench.plot_training_results import moving_average
 
@@ -292,7 +292,7 @@ def plotted_values(
             values,
             window_size,
             kind=moving_average_type,
-            epsilon=moving_average_epsilon,
+            ema_lambda=ema_lambda,
         )
     if perplexity and metric in {"validation_losses", "train_losses"}:
         return tuple(math.exp(value) for value in plotted)
@@ -325,7 +325,7 @@ def shared_limits(
     default_window_size: int,
     *,
     moving_average_type: str,
-    moving_average_epsilon: float,
+    ema_lambda: float,
 ) -> tuple[dict[str, tuple[float, float]], dict[str, list[object]]]:
     from optibench.plot_training_results import read_optimizer_series
 
@@ -352,7 +352,7 @@ def shared_limits(
                         window_size,
                         perplexity=section.perplexity,
                         moving_average_type=moving_average_type,
-                        moving_average_epsilon=moving_average_epsilon,
+                        ema_lambda=ema_lambda,
                     )
                 )
     return (
@@ -369,17 +369,17 @@ def build(
     *,
     window_size: int = 100,
     moving_average_type: str = DEFAULT_MOVING_AVERAGE_TYPE,
-    moving_average_epsilon: float = DEFAULT_MOVING_AVERAGE_EPSILON,
+    ema_lambda: float = DEFAULT_EMA_LAMBDA,
 ) -> None:
     sys.path.insert(0, str(optibench_root / "src"))
     from optibench.plot_training_results import plot_optimizer_comparison
 
     manifest: dict[str, object] = {
         "scale_error": "quadratic",
-        "window_size": window_size,
+        "simple_moving_average_window_size": window_size,
         "moving_average_type": moving_average_type,
-        "moving_average_epsilon": moving_average_epsilon,
-        "section_window_sizes": {
+        "ema_lambda": ema_lambda,
+        "section_simple_window_sizes": {
             section.name: section.window_size or window_size for section in SECTIONS
         },
         "validation_smoothed": False,
@@ -392,15 +392,15 @@ def build(
             optibench_root,
             window_size,
             moving_average_type=moving_average_type,
-            moving_average_epsilon=moving_average_epsilon,
+            ema_lambda=ema_lambda,
         )
         output_dir = DASHBOARD_ROOT / section.output_dir
         output_dir.mkdir(parents=True, exist_ok=True)
         section_manifest = {
             "shared_y_limits": limits,
-            "window_size": section_window_size,
+            "simple_moving_average_window_size": section_window_size,
             "moving_average_type": moving_average_type,
-            "moving_average_epsilon": moving_average_epsilon,
+            "ema_lambda": ema_lambda,
             "perplexity": section.perplexity,
             "figures": [],
         }
@@ -414,7 +414,7 @@ def build(
                 output_dir=output_dir,
                 window_size=section_window_size,
                 moving_average_type=moving_average_type,
-                moving_average_epsilon=moving_average_epsilon,
+                ema_lambda=ema_lambda,
                 perplexity=section.perplexity,
                 scale_error="quadratic",
                 y_limits=limits,
@@ -451,10 +451,9 @@ def parse_args() -> argparse.Namespace:
         default=DEFAULT_MOVING_AVERAGE_TYPE,
     )
     parser.add_argument(
-        "--moving-average-epsilon",
-        "--ma-epsilon",
+        "--ema-lambda",
         type=float,
-        default=DEFAULT_MOVING_AVERAGE_EPSILON,
+        default=DEFAULT_EMA_LAMBDA,
     )
     return parser.parse_args()
 
@@ -465,5 +464,5 @@ if __name__ == "__main__":
         arguments.optibench_root.expanduser().resolve(),
         window_size=arguments.window_size,
         moving_average_type=arguments.moving_average_type,
-        moving_average_epsilon=arguments.moving_average_epsilon,
+        ema_lambda=arguments.ema_lambda,
     )
