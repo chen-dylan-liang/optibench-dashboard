@@ -1,6 +1,53 @@
 {
   "scale_error": "quadratic",
+  "section_window_sizes": {
+    "language-modeling": 10,
+    "momentum-ablations": 100,
+    "optimizer-comparisons": 100
+  },
   "sections": {
+    "language-modeling": {
+      "figures": [
+        {
+          "csvs": [
+            "results/nanogpt-shakespeare-char-optimizer-comparison-sne-m50-h10-d5-dropout02-2500-math-20260804-015300/source/results/shakespeare-char/optimizer-comparison-sne-m50-h10-d5-dropout02-2500/char-gpt_sgd_shakespeare-char.csv",
+            "results/nanogpt-shakespeare-char-optimizer-comparison-sne-m50-h10-d5-dropout02-2500-math-20260804-015300/source/results/shakespeare-char/optimizer-comparison-sne-m50-h10-d5-dropout02-2500/char-gpt_adamw_shakespeare-char.csv",
+            "results/nanogpt-shakespeare-char-optimizer-comparison-sne-m50-h10-d5-dropout02-2500-math-20260804-015300/source/results/shakespeare-char/optimizer-comparison-sne-m50-h10-d5-dropout02-2500/char-gpt_muon_shakespeare-char.csv"
+          ],
+          "excluded_csvs": [],
+          "job_id": "nanogpt-shakespeare-char-optimizer-comparison-sne-m50-h10-d5-dropout02-2500-math-20260804-015300",
+          "output": "assets/plots/language-modeling/shakespeare-char-sne-m50.png"
+        }
+      ],
+      "perplexity": true,
+      "shared_y_limits": {
+        "angles": [
+          1.1129919025301933,
+          1.5451002565026284
+        ],
+        "quadratic_scale_distances": [
+          0.8186055680055982,
+          1.0083224903514822
+        ],
+        "reference_norms": [
+          9.441581540107729,
+          207.75256566524504
+        ],
+        "relative_distances": [
+          0.9825039448396764,
+          1.0008257559168514
+        ],
+        "train_losses": [
+          0.0,
+          1489.835805232924
+        ],
+        "validation_losses": [
+          3.6674834640506306,
+          14.743575107151964
+        ]
+      },
+      "window_size": 10
+    },
     "momentum-ablations": {
       "figures": [
         {
@@ -64,6 +111,7 @@
           "output": "assets/plots/momentum-ablations/sgd-cosine-lr.png"
         }
       ],
+      "perplexity": false,
       "shared_y_limits": {
         "angles": [
           0.7713614603579044,
@@ -89,7 +137,8 @@
           0.16757998913526534,
           0.9798200026154518
         ]
-      }
+      },
+      "window_size": 100
     },
     "optimizer-comparisons": {
       "figures": [
@@ -134,6 +183,7 @@
           "output": "assets/plots/optimizer-comparisons/resnet44-cosine-lr.png"
         }
       ],
+      "perplexity": false,
       "shared_y_limits": {
         "angles": [
           0.726427565306425,
@@ -159,7 +209,8 @@
           0.0477399967610836,
           0.9664599604904651
         ]
-      }
+      },
+      "window_size": 100
     }
   },
   "validation_smoothed": false,

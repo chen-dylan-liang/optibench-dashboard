@@ -21,10 +21,19 @@ METRICS = (
     "validation_accuracies",
     "train_losses",
 )
+LANGUAGE_METRICS = (
+    "quadratic_scale_distances",
+    "angles",
+    "relative_distances",
+    "reference_norms",
+    "validation_losses",
+    "train_losses",
+)
 NONNEGATIVE_METRICS = {
     "quadratic_scale_distances",
     "relative_distances",
     "reference_norms",
+    "validation_losses",
     "train_losses",
 }
 
@@ -56,6 +65,9 @@ class SectionSpec:
     name: str
     output_dir: str
     figures: tuple[FigureSpec, ...]
+    metrics: tuple[str, ...] = METRICS
+    window_size: int | None = None
+    perplexity: bool = False
 
 
 def optimizer_comparison(
@@ -115,6 +127,27 @@ def momentum_ablation(
         labels=labels,
         csv_names=csv_names,
         excluded_csv_names=excluded_csv_names,
+    )
+
+
+def shakespeare_comparison() -> FigureSpec:
+    return FigureSpec(
+        output="shakespeare-char-sne-m50",
+        title="Character-level Shakespeare optimizer comparison: SNE h=10 d=5",
+        job_id=(
+            "nanogpt-shakespeare-char-optimizer-comparison-"
+            "sne-m50-h10-d5-dropout02-2500-math-20260804-015300"
+        ),
+        result_dir=(
+            "shakespeare-char/"
+            "optimizer-comparison-sne-m50-h10-d5-dropout02-2500"
+        ),
+        labels=("SGD", "AdamW", "Muon"),
+        csv_names=(
+            "char-gpt_sgd_shakespeare-char.csv",
+            "char-gpt_adamw_shakespeare-char.csv",
+            "char-gpt_muon_shakespeare-char.csv",
+        ),
     )
 
 
@@ -221,10 +254,24 @@ SECTIONS = (
             ),
         ),
     ),
+    SectionSpec(
+        name="language-modeling",
+        output_dir="assets/plots/language-modeling",
+        figures=(shakespeare_comparison(),),
+        metrics=LANGUAGE_METRICS,
+        window_size=10,
+        perplexity=True,
+    ),
 )
 
 
-def plotted_values(series: object, metric: str, window_size: int) -> tuple[float, ...]:
+def plotted_values(
+    series: object,
+    metric: str,
+    window_size: int,
+    *,
+    perplexity: bool,
+) -> tuple[float, ...]:
     from optibench.plot_training_results import moving_average
 
     raw_values = getattr(series, metric)
@@ -233,9 +280,13 @@ def plotted_values(series: object, metric: str, window_size: int) -> tuple[float
     values = tuple(value for value in raw_values if math.isfinite(value))
     if not values:
         raise ValueError(f"{series.optimizer} has no finite {metric} values")
-    if metric == "validation_accuracies":
-        return values
-    return moving_average(values, min(window_size, len(values)))
+    if metric in {"validation_accuracies", "validation_losses"}:
+        plotted = values
+    else:
+        plotted = moving_average(values, min(window_size, len(values)))
+    if perplexity and metric in {"validation_losses", "train_losses"}:
+        return tuple(math.exp(value) for value in plotted)
+    return plotted
 
 
 def padded_limits(metric: str, values: list[float]) -> tuple[float, float]:
@@ -261,12 +312,13 @@ def padded_limits(metric: str, values: list[float]) -> tuple[float, float]:
 def shared_limits(
     section: SectionSpec,
     optibench_root: Path,
-    window_size: int,
+    default_window_size: int,
 ) -> tuple[dict[str, tuple[float, float]], dict[str, list[object]]]:
     from optibench.plot_training_results import read_optimizer_series
 
     by_figure: dict[str, list[object]] = {}
-    values_by_metric = {metric: [] for metric in METRICS}
+    window_size = section.window_size or default_window_size
+    values_by_metric = {metric: [] for metric in section.metrics}
     for figure in section.figures:
         paths = figure.csv_paths(optibench_root)
         missing = [path for path in paths if not path.is_file()]
@@ -278,10 +330,15 @@ def shared_limits(
             for label, path in zip(figure.labels, paths)
         ]
         by_figure[figure.output] = series
-        for metric in METRICS:
+        for metric in section.metrics:
             for item in series:
                 values_by_metric[metric].extend(
-                    plotted_values(item, metric, window_size)
+                    plotted_values(
+                        item,
+                        metric,
+                        window_size,
+                        perplexity=section.perplexity,
+                    )
                 )
     return (
         {
@@ -299,14 +356,23 @@ def build(optibench_root: Path, *, window_size: int = 100) -> None:
     manifest: dict[str, object] = {
         "scale_error": "quadratic",
         "window_size": window_size,
+        "section_window_sizes": {
+            section.name: section.window_size or window_size for section in SECTIONS
+        },
         "validation_smoothed": False,
         "sections": {},
     }
     for section in SECTIONS:
+        section_window_size = section.window_size or window_size
         limits, _ = shared_limits(section, optibench_root, window_size)
         output_dir = DASHBOARD_ROOT / section.output_dir
         output_dir.mkdir(parents=True, exist_ok=True)
-        section_manifest = {"shared_y_limits": limits, "figures": []}
+        section_manifest = {
+            "shared_y_limits": limits,
+            "window_size": section_window_size,
+            "perplexity": section.perplexity,
+            "figures": [],
+        }
         for figure in section.figures:
             paths = figure.csv_paths(optibench_root)
             output = plot_optimizer_comparison(
@@ -315,7 +381,8 @@ def build(optibench_root: Path, *, window_size: int = 100) -> None:
                 output_figure_name=figure.output,
                 title=figure.title,
                 output_dir=output_dir,
-                window_size=window_size,
+                window_size=section_window_size,
+                perplexity=section.perplexity,
                 scale_error="quadratic",
                 y_limits=limits,
             )

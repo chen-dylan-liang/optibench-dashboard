@@ -33,7 +33,7 @@
         </p>
       </div>
       <div class="run-status" aria-label="Dashboard status">
-        <strong>2</strong>
+        <strong>3</strong>
         <span>experiment sections</span>
       </div>
     </header>
@@ -290,10 +290,90 @@
           </p>
         </div>
       </section>
+
+      <section class="experiment-section" aria-labelledby="language-study-title">
+        <header class="experiment-heading">
+          <p class="section-index">Experiment 03</p>
+          <h2 id="language-study-title">Optimizer geometry in autoregressive language modeling</h2>
+          <p class="experiment-aim">
+            This experiment asks whether the optimizer-to-Newton-step relationships
+            observed in supervised vision persist in an autoregressive transformer.
+            Character-level language modeling changes the architecture, objective,
+            task metric, and source of stochasticity at once: dropout must remain
+            active during training, yet every gradient and Hessian-vector product
+            contributing to one estimate must refer to the same realized objective.
+            The comparison therefore tests both the transfer of the geometric
+            analysis and the estimator's ability to operate under model randomness.
+          </p>
+          <p class="experiment-method">
+            A 10.75M-parameter GPT is trained on character-level Tiny Shakespeare
+            for 2,500 optimizer steps using six transformer layers, six attention
+            heads, width 384, context length 256, batch size 64, dropout 0.2, and the
+            exact math attention backend. SGD uses base learning rate 0.1, AdamW
+            uses 0.003, and Muon uses 0.02 for matrix parameters with a 0.0003
+            auxiliary AdamW path. Every optimizer follows a 50-step linear warmup
+            and cosine decay to one tenth of its base rate. SNE uses \(h=10\) HVPs
+            per step and \(d=5\), hence \(m=50\); training loss is recorded every
+            step, geometry every five steps, and validation cross-entropy over 200
+            batches every 250 steps. The model remains in training mode while an RNG
+            snapshot replays the forward-pass dropout realization inside estimator
+            closures. Geometry and training use MA-10, validation remains raw, and
+            both task losses are shown as perplexity. Scale error is
+            \((1-\|a\|_2/\|x^*\|_2)^2\).
+          </p>
+        </header>
+
+        <div class="experiment-board" tabindex="0" aria-label="Language-model optimizer comparison figure">
+          <div class="board-grid" style="--panel-columns: 1">
+            <aside class="metric-rail" aria-label="Plot rows">
+              <div class="corner-label">Metric rows</div>
+              <ol>
+                <li><span>01</span>Scale error</li>
+                <li><span>02</span>Angle error</li>
+                <li><span>03</span>Relative distance</li>
+                <li><span>04</span>Newton-step norm</li>
+                <li><span>05</span>Validation perplexity</li>
+                <li><span>06</span>Training perplexity</li>
+              </ol>
+            </aside>
+
+            <article class="job-column">
+              <header class="job-header">
+                <div><p>Char-GPT · Tiny Shakespeare</p><h3>Optimizer comparison</h3><span>SGD · AdamW · Muon · SNE m=50</span></div>
+                <button class="expand-button" type="button" data-image="assets/plots/language-modeling/shakespeare-char-sne-m50.png" data-title="Character-level Shakespeare optimizer comparison" title="Open full-resolution plot" aria-label="Open character-level Shakespeare optimizer comparison plot">↗</button>
+              </header>
+              <img class="plot-image" src="assets/plots/language-modeling/shakespeare-char-sne-m50.png" alt="Six-row character-level Shakespeare optimizer comparison with validation and training perplexity" loading="lazy">
+            </article>
+          </div>
+        </div>
+
+        <div class="experiment-interpretation">
+          <h3>Interpretation and open questions</h3>
+          <p>
+            Adaptive and matrix-orthogonalized updates substantially outperform SGD
+            on the language-modeling objective: final validation perplexity is 4.17
+            for Muon, 4.26 for AdamW, and 11.50 for SGD. AdamW finishes with slightly
+            lower training perplexity than Muon, 3.07 versus 3.11, but its validation
+            perplexity reaches 4.23 at step 2,250 before ending slightly higher; Muon
+            retains the better validation result despite that small training-loss
+            disadvantage. The geometric rows separate complementary effects rather
+            than yielding one universal predictor. Muon produces the largest relative
+            update early in training and reaches the lowest quadratic scale error,
+            while AdamW generally exhibits stronger directional agreement. For all
+            three optimizers, however, the realized update remains much smaller than
+            the estimated Newton step and cosine decay pushes scale error and relative
+            distance back toward their zero-update limits late in training. The next
+            study should repeat this comparison across seeds and longer contexts,
+            include a fixed-learning-rate control, and test whether learning-rate-
+            normalized geometry predicts validation performance more reliably than
+            the realized displacement alone.
+          </p>
+        </div>
+      </section>
     </main>
 
     <footer>
-      <span>SNE measurements · quadratic scale error · 200 dpi</span>
+      <span>SNE measurements · quadratic scale error · task-aware validation · 200 dpi</span>
       <span>Legacy dashboard figures retained under assets/archive</span>
     </footer>
 

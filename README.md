@@ -11,10 +11,11 @@ Rebuild every active figure from retrieved CSV bundles with:
 ```
 
 The builder computes each row's limits from every curve in its section after
-the configured moving average, then supplies those same limits to every
+that section's configured moving average, then supplies those same limits to every
 separate six-row figure. It writes the exact source paths and numeric limits to
 `assets/plots/manifest.json`. Validation curves remain unsmoothed, and scale
-error is always quadratic.
+error is always quadratic. CIFAR sections use MA-100; the character-level
+Shakespeare section uses MA-10 and displays task losses as perplexity.
 
 The figures used by the original dashboard are retained verbatim under
 `assets/archive/legacy-plots/` and are not referenced by the active page.
