@@ -30,7 +30,7 @@ LANGUAGE_METRICS = (
     "train_losses",
 )
 MOVING_AVERAGE_TYPES = ("simple", "exponential")
-DEFAULT_MOVING_AVERAGE_TYPE = "exponential"
+DEFAULT_MOVING_AVERAGE_TYPE = "simple"
 DEFAULT_EMA_LAMBDA = 0.95
 NONNEGATIVE_METRICS = {
     "quadratic_scale_distances",
@@ -262,7 +262,7 @@ SECTIONS = (
         output_dir="assets/plots/language-modeling",
         figures=(shakespeare_comparison(),),
         metrics=LANGUAGE_METRICS,
-        window_size=100,
+        window_size=50,
         perplexity=True,
     ),
 )
@@ -376,15 +376,22 @@ def build(
 
     manifest: dict[str, object] = {
         "scale_error": "quadratic",
-        "simple_moving_average_window_size": window_size,
         "moving_average_type": moving_average_type,
-        "ema_lambda": ema_lambda,
-        "section_simple_window_sizes": {
-            section.name: section.window_size or window_size for section in SECTIONS
-        },
         "validation_smoothed": False,
         "sections": {},
     }
+    if moving_average_type == "simple":
+        manifest.update(
+            {
+                "simple_moving_average_window_size": window_size,
+                "section_simple_window_sizes": {
+                    section.name: section.window_size or window_size
+                    for section in SECTIONS
+                },
+            }
+        )
+    else:
+        manifest["ema_lambda"] = ema_lambda
     for section in SECTIONS:
         section_window_size = section.window_size or window_size
         limits, _ = shared_limits(
@@ -398,12 +405,16 @@ def build(
         output_dir.mkdir(parents=True, exist_ok=True)
         section_manifest = {
             "shared_y_limits": limits,
-            "simple_moving_average_window_size": section_window_size,
             "moving_average_type": moving_average_type,
-            "ema_lambda": ema_lambda,
             "perplexity": section.perplexity,
             "figures": [],
         }
+        if moving_average_type == "simple":
+            section_manifest["simple_moving_average_window_size"] = (
+                section_window_size
+            )
+        else:
+            section_manifest["ema_lambda"] = ema_lambda
         for figure in section.figures:
             paths = figure.csv_paths(optibench_root)
             output = plot_optimizer_comparison(
