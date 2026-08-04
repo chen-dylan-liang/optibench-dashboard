@@ -15,7 +15,7 @@ that section's configured moving average, then supplies those same limits to eve
 separate six-row figure. It writes the exact source paths and numeric limits to
 `assets/plots/manifest.json`. Validation curves remain unsmoothed, and scale
 error is always quadratic. Exponential moving average is the default, with
-`decay = epsilon ** (1 / window_size)` and `epsilon = 0.01`; simple trailing
+`decay = epsilon ** (1 / window_size)` and `epsilon = 1e-8`; simple trailing
 moving average remains selectable. CIFAR sections use EMA-100; the
 character-level Shakespeare section uses EMA-10 and displays task losses as
 perplexity.

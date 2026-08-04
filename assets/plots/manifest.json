@@ -1,5 +1,5 @@
 {
-  "moving_average_epsilon": 0.01,
+  "moving_average_epsilon": 1e-08,
   "moving_average_type": "exponential",
   "scale_error": "quadratic",
   "section_window_sizes": {
@@ -21,29 +21,29 @@
           "output": "assets/plots/language-modeling/shakespeare-char-sne-m50.png"
         }
       ],
-      "moving_average_epsilon": 0.01,
+      "moving_average_epsilon": 1e-08,
       "moving_average_type": "exponential",
       "perplexity": true,
       "shared_y_limits": {
         "angles": [
-          0.821777976737816,
-          1.5916334977603175
+          0.8183861206314009,
+          1.6628624759950363
         ],
         "quadratic_scale_distances": [
-          0.7995364601553685,
-          1.0092534187998252
+          0.7745786173473156,
+          1.010473436898009
         ],
         "reference_norms": [
           0.0,
-          247.2475667284993
+          301.57592015404475
         ],
         "relative_distances": [
-          0.9788640987388567,
-          1.002998568701882
+          0.9642469206750638,
+          1.007376873053618
         ],
         "train_losses": [
           0.0,
-          2781.9174093199595
+          5877.966634489461
         ],
         "validation_losses": [
           3.6674834640506306,
@@ -115,29 +115,29 @@
           "output": "assets/plots/momentum-ablations/sgd-cosine-lr.png"
         }
       ],
-      "moving_average_epsilon": 0.01,
+      "moving_average_epsilon": 1e-08,
       "moving_average_type": "exponential",
       "perplexity": false,
       "shared_y_limits": {
         "angles": [
-          0.7399587557517636,
-          1.6103600664469782
+          0.5908196379856377,
+          1.7352508051904918
         ],
         "quadratic_scale_distances": [
-          0.939479217988415,
-          1.002878388839037
+          0.9350888094180243,
+          1.0030894913757553
         ],
         "reference_norms": [
           0.0,
-          463.54040517898926
+          469.61402017071174
         ],
         "relative_distances": [
-          0.9923122859194833,
-          1.000738109870885
+          0.9903395920667877,
+          1.0008320476733943
         ],
         "train_losses": [
           0.0,
-          15.58085011501987
+          31.011322604377348
         ],
         "validation_accuracies": [
           0.16757998913526534,
@@ -189,29 +189,29 @@
           "output": "assets/plots/optimizer-comparisons/resnet44-cosine-lr.png"
         }
       ],
-      "moving_average_epsilon": 0.01,
+      "moving_average_epsilon": 1e-08,
       "moving_average_type": "exponential",
       "perplexity": false,
       "shared_y_limits": {
         "angles": [
-          0.7055235062240647,
-          1.5831742840731595
+          0.6054411897818075,
+          1.6335263561854758
         ],
         "quadratic_scale_distances": [
-          0.9096564102000547,
-          1.0042873726640738
+          0.9096561346082153,
+          1.0042931600927039
         ],
         "reference_norms": [
           0.0,
-          619.3030171308419
+          845.5619147784234
         ],
         "relative_distances": [
-          0.9809697226197107,
-          1.0009033552827877
+          0.9809686488918651,
+          1.000925903567548
         ],
         "train_losses": [
           0.0,
-          19.10545300132507
+          38.96554614756061
         ],
         "validation_accuracies": [
           0.0477399967610836,

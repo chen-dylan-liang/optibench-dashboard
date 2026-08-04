@@ -31,7 +31,7 @@ LANGUAGE_METRICS = (
 )
 MOVING_AVERAGE_TYPES = ("simple", "exponential")
 DEFAULT_MOVING_AVERAGE_TYPE = "exponential"
-DEFAULT_MOVING_AVERAGE_EPSILON = 0.01
+DEFAULT_MOVING_AVERAGE_EPSILON = 1.0e-8
 NONNEGATIVE_METRICS = {
     "quadratic_scale_distances",
     "relative_distances",
