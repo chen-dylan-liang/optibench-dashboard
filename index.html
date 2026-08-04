@@ -218,10 +218,7 @@
             sweep changes \(\beta_1\) while \(\beta_2=0.999\); for SGD it changes the
             conventional momentum coefficient. SNE again uses \(h=2\), \(d=10\), and
             \(m=20\), with MA-100 applied only to geometry and training loss and raw
-            validation accuracy retained at one observation per epoch. The
-            cosine-SGD panel reports the two completed coefficients, \(0.9\) and
-            \(0.5\); its unfinished \(0.1\) trajectory is excluded from both the
-            displayed curves and the shared-axis calculation.
+            validation accuracy retained at one observation per epoch.
           </p>
         </header>
 
@@ -265,7 +262,7 @@
             </article>
 
             <article class="job-column">
-              <header class="job-header"><div><p>SGD · ResNet-18</p><h3>Cosine-decay learning rate</h3><span>momentum 0.9 · 0.5</span></div><button class="expand-button" type="button" data-image="assets/plots/momentum-ablations/sgd-cosine-lr.png" data-title="SGD momentum ablation · cosine LR" title="Open full-resolution plot" aria-label="Open SGD cosine-LR plot">↗</button></header>
+              <header class="job-header"><div><p>SGD · ResNet-18</p><h3>Cosine-decay learning rate</h3><span>momentum 0.9 · 0.5 · 0.1</span></div><button class="expand-button" type="button" data-image="assets/plots/momentum-ablations/sgd-cosine-lr.png" data-title="SGD momentum ablation · cosine LR" title="Open full-resolution plot" aria-label="Open SGD cosine-LR plot">↗</button></header>
               <img class="plot-image" src="assets/plots/momentum-ablations/sgd-cosine-lr.png" alt="Six-row SGD momentum ablation with cosine-decay learning rate" loading="lazy">
             </article>
           </div>
@@ -281,11 +278,15 @@
             trade-off visible without allowing any column to magnify a narrow local
             range. Cosine decay again pushes the norm-sensitive metrics toward their
             zero-update limits, but the directional separation between coefficients
-            remains visible for much of training. The next analysis should determine
-            whether these trends are explained by effective averaging horizon alone
-            or by optimizer-specific state dynamics, and should test coefficients on
-            a finer grid with uncertainty across seeds before drawing a prescriptive
-            conclusion about the best momentum value.
+            remains visible for much of training. The completed cosine-SGD sweep
+            strengthens this observation: momentum \(0.1\) ends with the largest
+            angle error and the lowest validation accuracy, whereas momentum \(0.9\)
+            gives the strongest directional agreement and validation result. The
+            next analysis should determine whether these trends are explained by
+            effective averaging horizon alone or by optimizer-specific state
+            dynamics, and should test coefficients on a finer grid with uncertainty
+            across seeds before drawing a prescriptive conclusion about the best
+            momentum value.
           </p>
         </div>
       </section>

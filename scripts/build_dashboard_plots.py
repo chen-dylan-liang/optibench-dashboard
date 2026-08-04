@@ -218,10 +218,6 @@ SECTIONS = (
                     "20260804-014200"
                 ),
                 result_dir="cifar10-resnet18-sgd-momentum-sne-h2-d10-cosine-lr",
-                values=("0.9", "0.5"),
-                excluded_csv_names=(
-                    "resnet18_sgd-momentum-0-1_cifar10-gn4.csv",
-                ),
             ),
         ),
     ),

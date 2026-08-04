@@ -56,11 +56,10 @@
         {
           "csvs": [
             "results/cifar10-resnet18-sgd-momentum-sne-h2-d10-cosine-lr-20260804-014200/source/results/cifar10-resnet18-sgd-momentum-sne-h2-d10-cosine-lr/resnet18_sgd-momentum-0-9_cifar10-gn4.csv",
-            "results/cifar10-resnet18-sgd-momentum-sne-h2-d10-cosine-lr-20260804-014200/source/results/cifar10-resnet18-sgd-momentum-sne-h2-d10-cosine-lr/resnet18_sgd-momentum-0-5_cifar10-gn4.csv"
+            "results/cifar10-resnet18-sgd-momentum-sne-h2-d10-cosine-lr-20260804-014200/source/results/cifar10-resnet18-sgd-momentum-sne-h2-d10-cosine-lr/resnet18_sgd-momentum-0-5_cifar10-gn4.csv",
+            "results/cifar10-resnet18-sgd-momentum-sne-h2-d10-cosine-lr-20260804-014200/source/results/cifar10-resnet18-sgd-momentum-sne-h2-d10-cosine-lr/resnet18_sgd-momentum-0-1_cifar10-gn4.csv"
           ],
-          "excluded_csvs": [
-            "resnet18_sgd-momentum-0-1_cifar10-gn4.csv"
-          ],
+          "excluded_csvs": [],
           "job_id": "cifar10-resnet18-sgd-momentum-sne-h2-d10-cosine-lr-20260804-014200",
           "output": "assets/plots/momentum-ablations/sgd-cosine-lr.png"
         }
@@ -76,7 +75,7 @@
         ],
         "reference_norms": [
           0.0,
-          357.6338658020496
+          357.6499799368381
         ],
         "relative_distances": [
           0.9936378291534251,
