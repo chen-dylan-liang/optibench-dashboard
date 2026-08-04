@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta
       name="description"
-      content="OptiBench remote experiment dashboard for optimizer-to-Newton-step geometry."
+      content="OptiBench experiment dashboard for optimizer-to-Newton-step geometry."
     >
-    <title>OptiBench Remote Runs</title>
+    <title>OptiBench Experiment Studies</title>
     <link rel="stylesheet" href="styles.css">
     <script>
       window.MathJax = {
@@ -24,16 +24,17 @@
   <body>
     <header class="page-header">
       <div>
-        <p class="eyebrow">Remote experiment dashboard</p>
+        <p class="eyebrow">Paper experiment dashboard</p>
         <h1>OptiBench</h1>
         <p class="summary">
-          Optimizer displacement measured against an estimated Newton step.
-          Every panel below uses the same six-row analysis layout.
+          Controlled studies of optimizer displacement relative to an estimated
+          Newton step. Each section develops one paper experiment from its
+          motivation and protocol through the observed geometry and open questions.
         </p>
       </div>
       <div class="run-status" aria-label="Dashboard status">
-        <strong>6</strong>
-        <span>completed jobs</span>
+        <strong>2</strong>
+        <span>experiment sections</span>
       </div>
     </header>
 
@@ -55,8 +56,8 @@
             <div class="metric-number">01</div>
             <div>
               <h3>Scale error</h3>
-              <p class="formula">\(E_{\mathrm{scale}}=\left|\log(A/X)\right|\)</p>
-              <p>Zero means equal lengths; reciprocal ratios have equal error.</p>
+              <p class="formula">\(E_{\mathrm{scale}}=(1-A/X)^2\)</p>
+              <p>Zero denotes equal norms; relative norm mismatch is penalized quadratically.</p>
             </div>
           </article>
 
@@ -89,27 +90,50 @@
         </div>
 
         <p class="orientation-note">
-          \(P/X\) determines the sine magnitude, but not whether the angle is
-          acute or supplementary. The sign test supplies that missing
-          orientation. No tolerance is added to any denominator.
+          \(P/X\) determines the sine magnitude but not whether the angle is
+          acute or supplementary. The sign test supplies that missing orientation,
+          and no tolerance is added to a denominator.
         </p>
       </section>
 
-      <section class="dashboard" aria-labelledby="dashboard-title">
-        <div class="dashboard-bar">
-          <div>
-            <p class="section-index">Completed remote jobs</p>
-            <h2 id="dashboard-title">Comparison matrix</h2>
-          </div>
-          <div class="zoom-controls" aria-label="Plot column width">
-            <button id="zoom-out" type="button" title="Narrower columns" aria-label="Narrower columns">−</button>
-            <button id="zoom-reset" type="button" title="Reset column width">1:1</button>
-            <button id="zoom-in" type="button" title="Wider columns" aria-label="Wider columns">+</button>
-          </div>
+      <div class="global-tools" aria-label="Plot display controls">
+        <div>
+          <p class="section-index">Figure controls</p>
+          <p>Column width applies to every experiment panel.</p>
         </div>
+        <div class="zoom-controls" aria-label="Plot column width">
+          <button id="zoom-out" type="button" title="Narrower columns" aria-label="Narrower columns">−</button>
+          <button id="zoom-reset" type="button" title="Reset column width">1:1</button>
+          <button id="zoom-in" type="button" title="Wider columns" aria-label="Wider columns">+</button>
+        </div>
+      </div>
 
-        <div class="board-scroll" id="board-scroll" tabindex="0">
-          <div class="board-grid" id="board-grid">
+      <section class="experiment-section" aria-labelledby="optimizer-study-title">
+        <header class="experiment-heading">
+          <p class="section-index">Experiment 01</p>
+          <h2 id="optimizer-study-title">Optimizer comparisons across depth and learning-rate policy</h2>
+          <p class="experiment-aim">
+            This experiment asks whether the optimizer-to-Newton-step relationship is
+            stable across model depth and whether conclusions drawn under a fixed
+            learning rate survive the introduction of cosine decay. ResNet-20 and
+            ResNet-44 provide two depths from the original CIFAR family, while paired
+            fixed and decayed schedules separate architectural effects from the
+            changing update scale induced by scheduling.
+          </p>
+          <p class="experiment-method">
+            Every column trains CIFAR-10 for 100 epochs with batch size 128 and
+            GroupNorm using four groups. SGD, AdamW, and Muon start from matched model
+            seeds and data order. Geometry is estimated with SNE using \(h=2\) HVPs
+            per step and interval \(d=10\), hence sketch size \(m=20\). Training loss
+            is recorded every step, the three geometric measurements every ten steps,
+            and validation accuracy once per epoch. The geometric and training curves
+            use a 100-sample moving average; validation remains unsmoothed. Scale is
+            reported exclusively as \((1-\|a\|_2/\|x^*\|_2)^2\).
+          </p>
+        </header>
+
+        <div class="experiment-board" tabindex="0" aria-label="Optimizer comparison figures">
+          <div class="board-grid" style="--panel-columns: 4">
             <aside class="metric-rail" aria-label="Plot rows">
               <div class="corner-label">Metric rows</div>
               <ol>
@@ -124,154 +148,152 @@
 
             <article class="job-column">
               <header class="job-header">
-                <div>
-                  <p>ResNet-18 · CIFAR-10</p>
-                  <h3>Optimizer comparison</h3>
-                  <span>SGD · AdamW · Muon</span>
-                </div>
-                <button
-                  class="expand-button"
-                  type="button"
-                  data-image="assets/plots/optimizer-comparison.png"
-                  data-title="Optimizer comparison"
-                  title="Open full-resolution plot"
-                  aria-label="Open optimizer comparison plot"
-                >↗</button>
+                <div><p>ResNet-20 · CIFAR-10</p><h3>Fixed learning rate</h3><span>SGD · AdamW · Muon</span></div>
+                <button class="expand-button" type="button" data-image="assets/plots/optimizer-comparisons/resnet20-fixed-lr.png" data-title="ResNet-20 optimizer comparison · fixed LR" title="Open full-resolution plot" aria-label="Open ResNet-20 fixed-LR plot">↗</button>
               </header>
-              <img
-                class="plot-image"
-                src="assets/plots/optimizer-comparison.png"
-                alt="Six-row optimizer comparison for SGD, AdamW, and Muon"
-              >
+              <img class="plot-image" src="assets/plots/optimizer-comparisons/resnet20-fixed-lr.png" alt="Six-row ResNet-20 optimizer comparison with fixed learning rates">
             </article>
 
             <article class="job-column">
               <header class="job-header">
-                <div>
-                  <p>ResNet-44 · CIFAR-10</p>
-                  <h3>Optimizer comparison</h3>
-                  <span>SGD · AdamW · Muon</span>
-                </div>
-                <button
-                  class="expand-button"
-                  type="button"
-                  data-image="assets/plots/resnet44-optimizer-comparison.png"
-                  data-title="ResNet-44 optimizer comparison"
-                  title="Open full-resolution plot"
-                  aria-label="Open ResNet-44 optimizer comparison plot"
-                >↗</button>
+                <div><p>ResNet-44 · CIFAR-10</p><h3>Fixed learning rate</h3><span>SGD · AdamW · Muon</span></div>
+                <button class="expand-button" type="button" data-image="assets/plots/optimizer-comparisons/resnet44-fixed-lr.png" data-title="ResNet-44 optimizer comparison · fixed LR" title="Open full-resolution plot" aria-label="Open ResNet-44 fixed-LR plot">↗</button>
               </header>
-              <img
-                class="plot-image"
-                src="assets/plots/resnet44-optimizer-comparison.png"
-                alt="Six-row ResNet-44 optimizer comparison for SGD, AdamW, and Muon"
-                loading="lazy"
-              >
+              <img class="plot-image" src="assets/plots/optimizer-comparisons/resnet44-fixed-lr.png" alt="Six-row ResNet-44 optimizer comparison with fixed learning rates" loading="lazy">
             </article>
 
             <article class="job-column">
               <header class="job-header">
-                <div>
-                  <p>Char-GPT · Tiny Shakespeare</p>
-                  <h3>Optimizer comparison</h3>
-                  <span>SGD · AdamW · Muon · perplexity</span>
-                </div>
-                <button
-                  class="expand-button"
-                  type="button"
-                  data-image="assets/plots/shakespeare-optimizer-comparison.png"
-                  data-title="Tiny Shakespeare optimizer comparison"
-                  title="Open full-resolution plot"
-                  aria-label="Open Tiny Shakespeare optimizer comparison plot"
-                >↗</button>
+                <div><p>ResNet-20 · CIFAR-10</p><h3>Cosine-decay learning rate</h3><span>SGD · AdamW · Muon</span></div>
+                <button class="expand-button" type="button" data-image="assets/plots/optimizer-comparisons/resnet20-cosine-lr.png" data-title="ResNet-20 optimizer comparison · cosine LR" title="Open full-resolution plot" aria-label="Open ResNet-20 cosine-LR plot">↗</button>
               </header>
-              <img
-                class="plot-image"
-                src="assets/plots/shakespeare-optimizer-comparison.png"
-                alt="Six-row Tiny Shakespeare char-GPT optimizer comparison with validation and training perplexity"
-                loading="lazy"
-              >
+              <img class="plot-image" src="assets/plots/optimizer-comparisons/resnet20-cosine-lr.png" alt="Six-row ResNet-20 optimizer comparison with cosine-decay learning rates" loading="lazy">
             </article>
 
             <article class="job-column">
               <header class="job-header">
-                <div>
-                  <p>ResNet-18 · CIFAR-10</p>
-                  <h3>Muon momentum</h3>
-                  <span>0.9 · 0.5 · 0.1</span>
-                </div>
-                <button
-                  class="expand-button"
-                  type="button"
-                  data-image="assets/plots/muon-momentum.png"
-                  data-title="Muon momentum ablation"
-                  title="Open full-resolution plot"
-                  aria-label="Open Muon momentum plot"
-                >↗</button>
+                <div><p>ResNet-44 · CIFAR-10</p><h3>Cosine-decay learning rate</h3><span>SGD · AdamW · Muon</span></div>
+                <button class="expand-button" type="button" data-image="assets/plots/optimizer-comparisons/resnet44-cosine-lr.png" data-title="ResNet-44 optimizer comparison · cosine LR" title="Open full-resolution plot" aria-label="Open ResNet-44 cosine-LR plot">↗</button>
               </header>
-              <img
-                class="plot-image"
-                src="assets/plots/muon-momentum.png"
-                alt="Six-row Muon momentum ablation"
-                loading="lazy"
-              >
-            </article>
-
-            <article class="job-column">
-              <header class="job-header">
-                <div>
-                  <p>ResNet-18 · CIFAR-10</p>
-                  <h3>AdamW beta1</h3>
-                  <span>0.9 · 0.5 · 0.1</span>
-                </div>
-                <button
-                  class="expand-button"
-                  type="button"
-                  data-image="assets/plots/adamw-beta1.png"
-                  data-title="AdamW beta1 ablation"
-                  title="Open full-resolution plot"
-                  aria-label="Open AdamW beta1 plot"
-                >↗</button>
-              </header>
-              <img
-                class="plot-image"
-                src="assets/plots/adamw-beta1.png"
-                alt="Six-row AdamW beta1 ablation"
-                loading="lazy"
-              >
-            </article>
-
-            <article class="job-column">
-              <header class="job-header">
-                <div>
-                  <p>ResNet-18 · CIFAR-10</p>
-                  <h3>SGD momentum</h3>
-                  <span>0.9 · 0.5 · 0.1</span>
-                </div>
-                <button
-                  class="expand-button"
-                  type="button"
-                  data-image="assets/plots/sgd-momentum.png"
-                  data-title="SGD momentum ablation"
-                  title="Open full-resolution plot"
-                  aria-label="Open SGD momentum plot"
-                >↗</button>
-              </header>
-              <img
-                class="plot-image"
-                src="assets/plots/sgd-momentum.png"
-                alt="Six-row SGD momentum ablation"
-                loading="lazy"
-              >
+              <img class="plot-image" src="assets/plots/optimizer-comparisons/resnet44-cosine-lr.png" alt="Six-row ResNet-44 optimizer comparison with cosine-decay learning rates" loading="lazy">
             </article>
           </div>
+        </div>
+
+        <div class="experiment-interpretation">
+          <h3>Interpretation and open questions</h3>
+          <p>
+            Reading the four columns on common row-wise axes distinguishes effects
+            that persist across depth from effects introduced by the schedule. The
+            cosine runs progressively suppress the realized optimizer displacement,
+            causing the scale and relative-distance rows to approach their limiting
+            values late in training even when directional alignment remains
+            informative. The fixed-rate runs therefore provide the cleaner view of
+            steady-state geometry, whereas the cosine runs reveal how that geometry
+            co-evolves with the training protocol. A remaining question is whether a
+            learning-rate-normalized displacement should be reported alongside the
+            realized update, and whether the same optimizer ranking persists for
+            wider networks, alternative normalization layers, and longer schedules.
+          </p>
+        </div>
+      </section>
+
+      <section class="experiment-section" aria-labelledby="momentum-study-title">
+        <header class="experiment-heading">
+          <p class="section-index">Experiment 02</p>
+          <h2 id="momentum-study-title">Momentum ablations across optimizer families</h2>
+          <p class="experiment-aim">
+            This experiment isolates how temporal averaging changes the geometry of
+            an optimizer step. Rather than treating momentum as a secondary tuning
+            detail, it compares the same three coefficients across Muon's matrix
+            update, AdamW's first-moment estimate, and classical SGD momentum, then
+            repeats the comparison under fixed and cosine-decayed learning rates.
+          </p>
+          <p class="experiment-method">
+            All six columns use ResNet-18 on CIFAR-10 for 100 epochs with the same
+            initialization, batch size 128, GroupNorm configuration, weight-decay
+            treatment, and optimizer-specific base learning rates. The ablated value
+            is \(0.9\), \(0.5\), or \(0.1\). For Muon only the matrix-parameter
+            momentum changes, leaving the auxiliary AdamW path fixed; for AdamW the
+            sweep changes \(\beta_1\) while \(\beta_2=0.999\); for SGD it changes the
+            conventional momentum coefficient. SNE again uses \(h=2\), \(d=10\), and
+            \(m=20\), with MA-100 applied only to geometry and training loss and raw
+            validation accuracy retained at one observation per epoch. The
+            cosine-SGD panel reports the two completed coefficients, \(0.9\) and
+            \(0.5\); its unfinished \(0.1\) trajectory is excluded from both the
+            displayed curves and the shared-axis calculation.
+          </p>
+        </header>
+
+        <div class="experiment-board" tabindex="0" aria-label="Momentum ablation figures">
+          <div class="board-grid" style="--panel-columns: 6">
+            <aside class="metric-rail" aria-label="Plot rows">
+              <div class="corner-label">Metric rows</div>
+              <ol>
+                <li><span>01</span>Scale error</li>
+                <li><span>02</span>Angle error</li>
+                <li><span>03</span>Relative distance</li>
+                <li><span>04</span>Newton-step norm</li>
+                <li><span>05</span>Task validation</li>
+                <li><span>06</span>Task training</li>
+              </ol>
+            </aside>
+
+            <article class="job-column">
+              <header class="job-header"><div><p>Muon · ResNet-18</p><h3>Fixed learning rate</h3><span>momentum 0.9 · 0.5 · 0.1</span></div><button class="expand-button" type="button" data-image="assets/plots/momentum-ablations/muon-fixed-lr.png" data-title="Muon momentum ablation · fixed LR" title="Open full-resolution plot" aria-label="Open Muon fixed-LR plot">↗</button></header>
+              <img class="plot-image" src="assets/plots/momentum-ablations/muon-fixed-lr.png" alt="Six-row Muon momentum ablation with fixed learning rate">
+            </article>
+
+            <article class="job-column">
+              <header class="job-header"><div><p>AdamW · ResNet-18</p><h3>Fixed learning rate</h3><span>beta1 0.9 · 0.5 · 0.1</span></div><button class="expand-button" type="button" data-image="assets/plots/momentum-ablations/adamw-fixed-lr.png" data-title="AdamW beta1 ablation · fixed LR" title="Open full-resolution plot" aria-label="Open AdamW fixed-LR plot">↗</button></header>
+              <img class="plot-image" src="assets/plots/momentum-ablations/adamw-fixed-lr.png" alt="Six-row AdamW beta1 ablation with fixed learning rate" loading="lazy">
+            </article>
+
+            <article class="job-column">
+              <header class="job-header"><div><p>SGD · ResNet-18</p><h3>Fixed learning rate</h3><span>momentum 0.9 · 0.5 · 0.1</span></div><button class="expand-button" type="button" data-image="assets/plots/momentum-ablations/sgd-fixed-lr.png" data-title="SGD momentum ablation · fixed LR" title="Open full-resolution plot" aria-label="Open SGD fixed-LR plot">↗</button></header>
+              <img class="plot-image" src="assets/plots/momentum-ablations/sgd-fixed-lr.png" alt="Six-row SGD momentum ablation with fixed learning rate" loading="lazy">
+            </article>
+
+            <article class="job-column">
+              <header class="job-header"><div><p>Muon · ResNet-18</p><h3>Cosine-decay learning rate</h3><span>momentum 0.9 · 0.5 · 0.1</span></div><button class="expand-button" type="button" data-image="assets/plots/momentum-ablations/muon-cosine-lr.png" data-title="Muon momentum ablation · cosine LR" title="Open full-resolution plot" aria-label="Open Muon cosine-LR plot">↗</button></header>
+              <img class="plot-image" src="assets/plots/momentum-ablations/muon-cosine-lr.png" alt="Six-row Muon momentum ablation with cosine-decay learning rate" loading="lazy">
+            </article>
+
+            <article class="job-column">
+              <header class="job-header"><div><p>AdamW · ResNet-18</p><h3>Cosine-decay learning rate</h3><span>beta1 0.9 · 0.5 · 0.1</span></div><button class="expand-button" type="button" data-image="assets/plots/momentum-ablations/adamw-cosine-lr.png" data-title="AdamW beta1 ablation · cosine LR" title="Open full-resolution plot" aria-label="Open AdamW cosine-LR plot">↗</button></header>
+              <img class="plot-image" src="assets/plots/momentum-ablations/adamw-cosine-lr.png" alt="Six-row AdamW beta1 ablation with cosine-decay learning rate" loading="lazy">
+            </article>
+
+            <article class="job-column">
+              <header class="job-header"><div><p>SGD · ResNet-18</p><h3>Cosine-decay learning rate</h3><span>momentum 0.9 · 0.5</span></div><button class="expand-button" type="button" data-image="assets/plots/momentum-ablations/sgd-cosine-lr.png" data-title="SGD momentum ablation · cosine LR" title="Open full-resolution plot" aria-label="Open SGD cosine-LR plot">↗</button></header>
+              <img class="plot-image" src="assets/plots/momentum-ablations/sgd-cosine-lr.png" alt="Six-row SGD momentum ablation with cosine-decay learning rate" loading="lazy">
+            </article>
+          </div>
+        </div>
+
+        <div class="experiment-interpretation">
+          <h3>Interpretation and open questions</h3>
+          <p>
+            Across optimizer families, stronger momentum primarily improves
+            directional agreement with the estimated Newton step, while its effect on
+            scale is not equivalent: the coefficient changes both accumulated state
+            and the norm of the realized displacement. The shared axes make this
+            trade-off visible without allowing any column to magnify a narrow local
+            range. Cosine decay again pushes the norm-sensitive metrics toward their
+            zero-update limits, but the directional separation between coefficients
+            remains visible for much of training. The next analysis should determine
+            whether these trends are explained by effective averaging horizon alone
+            or by optimizer-specific state dynamics, and should test coefficients on
+            a finer grid with uncertainty across seeds before drawing a prescriptive
+            conclusion about the best momentum value.
+          </p>
         </div>
       </section>
     </main>
 
     <footer>
-      <span>NE measurements · 200 dpi</span>
-      <span>Last dashboard update: 1 August 2026</span>
+      <span>SNE measurements · quadratic scale error · 200 dpi</span>
+      <span>Legacy dashboard figures retained under assets/archive</span>
     </footer>
 
     <dialog id="plot-dialog">

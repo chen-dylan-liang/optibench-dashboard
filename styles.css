@@ -56,7 +56,6 @@ footer {
   color: var(--red);
   font-size: 0.72rem;
   font-weight: 750;
-  letter-spacing: 0;
   text-transform: uppercase;
 }
 
@@ -69,13 +68,18 @@ p {
 
 h1 {
   margin-bottom: 7px;
-  font-size: clamp(2.2rem, 4rem, 4rem);
+  font-size: clamp(2.2rem, 6vw, 4rem);
   line-height: 0.95;
-  letter-spacing: 0;
+}
+
+h2 {
+  margin-bottom: 0;
+  font-size: 1.35rem;
+  line-height: 1.2;
 }
 
 .summary {
-  max-width: 720px;
+  max-width: 760px;
   margin-bottom: 0;
   color: var(--muted);
   font-size: 1rem;
@@ -106,19 +110,12 @@ h1 {
 }
 
 .section-heading,
-.dashboard-bar {
+.global-tools {
   display: flex;
   align-items: end;
   justify-content: space-between;
   gap: 32px;
   margin-bottom: 16px;
-}
-
-h2 {
-  margin-bottom: 0;
-  font-size: 1.35rem;
-  line-height: 1.2;
-  letter-spacing: 0;
 }
 
 .primitive-key {
@@ -199,13 +196,16 @@ h2 {
   line-height: 1.5;
 }
 
-.dashboard {
-  padding: 20px 0 28px;
+.global-tools {
+  margin: 0;
+  padding: 17px 0;
   border-top: 1px solid var(--line);
 }
 
-.dashboard-bar {
-  margin-bottom: 12px;
+.global-tools p:last-child {
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 0.78rem;
 }
 
 .zoom-controls {
@@ -241,7 +241,43 @@ h2 {
   outline: none;
 }
 
-.board-scroll {
+.experiment-section {
+  padding: 34px 0 38px;
+  border-top: 1px solid var(--line);
+}
+
+.experiment-heading {
+  max-width: 1160px;
+  margin-bottom: 22px;
+}
+
+.experiment-heading h2 {
+  max-width: 920px;
+  margin-bottom: 16px;
+  font-size: clamp(1.45rem, 2.2vw, 2rem);
+}
+
+.experiment-aim,
+.experiment-method,
+.experiment-interpretation p {
+  max-width: 1040px;
+  color: #3f464a;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.experiment-aim {
+  margin-bottom: 11px;
+  color: var(--ink);
+  font-size: 1.08rem;
+}
+
+.experiment-method {
+  margin-bottom: 0;
+}
+
+.experiment-board {
   height: min(72vh, 980px);
   overflow: auto;
   overscroll-behavior: contain;
@@ -252,14 +288,14 @@ h2 {
   scrollbar-width: thin;
 }
 
-.board-scroll.dragging {
+.experiment-board.dragging {
   cursor: grabbing;
   user-select: none;
 }
 
 .board-grid {
   display: grid;
-  grid-template-columns: 144px repeat(6, var(--column-width));
+  grid-template-columns: 144px repeat(var(--panel-columns), var(--column-width));
   align-items: start;
   width: max-content;
   min-height: 100%;
@@ -367,11 +403,29 @@ h2 {
   pointer-events: none;
 }
 
+.experiment-interpretation {
+  max-width: 1100px;
+  margin-top: 20px;
+  padding: 18px 20px 20px;
+  border-left: 3px solid var(--teal);
+  background: rgba(255, 255, 255, 0.66);
+}
+
+.experiment-interpretation h3 {
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+}
+
+.experiment-interpretation p {
+  margin-bottom: 0;
+}
+
 footer {
   display: flex;
   justify-content: space-between;
   gap: 24px;
   padding: 18px 0 30px;
+  border-top: 1px solid var(--line);
   color: var(--muted);
   font-size: 0.72rem;
 }
@@ -464,17 +518,28 @@ dialog::backdrop {
     font-size: 0.82rem;
   }
 
-  .board-scroll {
+  .experiment-board {
     height: 72vh;
   }
 
   .board-grid {
-    grid-template-columns: 116px repeat(4, var(--column-width));
+    grid-template-columns: 116px repeat(var(--panel-columns), var(--column-width));
   }
 
   .metric-rail li {
     padding-inline: 10px;
     font-size: 0.68rem;
+  }
+
+  .experiment-aim,
+  .experiment-method,
+  .experiment-interpretation p {
+    font-size: 0.98rem;
+  }
+
+  footer {
+    flex-direction: column;
+    gap: 5px;
   }
 }
 
