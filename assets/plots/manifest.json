@@ -3,7 +3,7 @@
   "moving_average_type": "exponential",
   "scale_error": "quadratic",
   "section_window_sizes": {
-    "language-modeling": 10,
+    "language-modeling": 100,
     "momentum-ablations": 100,
     "optimizer-comparisons": 100
   },
@@ -26,31 +26,31 @@
       "perplexity": true,
       "shared_y_limits": {
         "angles": [
-          0.8183861206314009,
-          1.6628624759950363
+          0.8233957603767907,
+          1.5576600413418509
         ],
         "quadratic_scale_distances": [
-          0.7745786173473156,
-          1.010473436898009
+          0.818445178893694,
+          1.0083280331518556
         ],
         "reference_norms": [
-          0.0,
-          301.57592015404475
+          2.5605700274307246,
+          177.56108225575775
         ],
         "relative_distances": [
-          0.9642469206750638,
-          1.007376873053618
+          0.9835825374104336,
+          1.0007728052587823
         ],
         "train_losses": [
           0.0,
-          5877.966634489461
+          1341.4772584277116
         ],
         "validation_losses": [
           3.6674834640506306,
           14.743575107151964
         ]
       },
-      "window_size": 10
+      "window_size": 100
     },
     "momentum-ablations": {
       "figures": [

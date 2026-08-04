@@ -262,7 +262,7 @@ SECTIONS = (
         output_dir="assets/plots/language-modeling",
         figures=(shakespeare_comparison(),),
         metrics=LANGUAGE_METRICS,
-        window_size=10,
+        window_size=100,
         perplexity=True,
     ),
 )
