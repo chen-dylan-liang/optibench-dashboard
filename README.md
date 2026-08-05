@@ -1,8 +1,10 @@
 # OptiBench experiment dashboard
 
 The dashboard is a static paper-oriented view of completed OptiBench studies.
-Each experiment owns an independently scrollable figure matrix while the zoom
-controls, metric geometry, and full-resolution dialog are shared.
+Its active sections cover CIFAR-10 depth scaling, CIFAR-100 dataset scaling,
+momentum ablations, and character-level language modeling. Each experiment owns
+an independently scrollable figure matrix while the zoom controls, metric
+geometry, and full-resolution dialog are shared.
 
 Rebuild every active figure from retrieved CSV bundles with:
 

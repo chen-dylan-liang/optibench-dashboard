@@ -33,7 +33,7 @@
         </p>
       </div>
       <div class="run-status" aria-label="Dashboard status">
-        <strong>3</strong>
+        <strong>4</strong>
         <span>experiment sections</span>
       </div>
     </header>
@@ -114,16 +114,18 @@
           <h2 id="optimizer-study-title">Optimizer comparisons across depth and learning-rate policy</h2>
           <p class="experiment-aim">
             This experiment asks whether the optimizer-to-Newton-step relationship is
-            stable across model depth and whether conclusions drawn under a fixed
-            learning rate survive the introduction of cosine decay. ResNet-20 and
-            ResNet-44 provide two depths from the original CIFAR family, while paired
-            fixed and decayed schedules separate architectural effects from the
-            changing update scale induced by scheduling.
+            stable as a CIFAR-10 residual network becomes deeper and whether
+            conclusions drawn under a fixed learning rate survive the introduction
+            of cosine decay. ResNet-20, ResNet-44, and the completed fixed-rate
+            ResNet-56 run extend the comparison along depth, while paired schedules
+            for the first two architectures separate architectural effects from the
+            changing update scale induced by scheduling. The corresponding
+            ResNet-56 cosine control will join the panel when it finishes.
           </p>
           <p class="experiment-method">
-            Every column trains CIFAR-10 for 100 epochs with batch size 128 and
-            GroupNorm using four groups. SGD, AdamW, and Muon start from matched model
-            seeds and data order. Geometry is estimated with SNE using \(h=2\) HVPs
+            Every completed column trains CIFAR-10 for 100 epochs with batch size 128
+            and GroupNorm using four groups. SGD, AdamW, and Muon start from matched
+            model seeds and data order. Geometry is estimated with SNE using \(h=2\) HVPs
             per step and interval \(d=10\), hence sketch size \(m=20\). Training loss
             is recorded every step, the three geometric measurements every ten steps,
             and validation accuracy once per epoch. The geometric and training curves
@@ -133,7 +135,7 @@
         </header>
 
         <div class="experiment-board" tabindex="0" aria-label="Optimizer comparison figures">
-          <div class="board-grid" style="--panel-columns: 4">
+          <div class="board-grid" style="--panel-columns: 5">
             <aside class="metric-rail" aria-label="Plot rows">
               <div class="corner-label">Metric rows</div>
               <ol>
@@ -164,6 +166,14 @@
 
             <article class="job-column">
               <header class="job-header">
+                <div><p>ResNet-56 · CIFAR-10</p><h3>Fixed learning rate</h3><span>SGD · AdamW · Muon</span></div>
+                <button class="expand-button" type="button" data-image="assets/plots/optimizer-comparisons/resnet56-fixed-lr.png" data-title="ResNet-56 optimizer comparison · fixed LR" title="Open full-resolution plot" aria-label="Open ResNet-56 fixed-LR plot">↗</button>
+              </header>
+              <img class="plot-image" src="assets/plots/optimizer-comparisons/resnet56-fixed-lr.png" alt="Six-row ResNet-56 optimizer comparison with fixed learning rates" loading="lazy">
+            </article>
+
+            <article class="job-column">
+              <header class="job-header">
                 <div><p>ResNet-20 · CIFAR-10</p><h3>Cosine-decay learning rate</h3><span>SGD · AdamW · Muon</span></div>
                 <button class="expand-button" type="button" data-image="assets/plots/optimizer-comparisons/resnet20-cosine-lr.png" data-title="ResNet-20 optimizer comparison · cosine LR" title="Open full-resolution plot" aria-label="Open ResNet-20 cosine-LR plot">↗</button>
               </header>
@@ -183,8 +193,13 @@
         <div class="experiment-interpretation">
           <h3>Interpretation and open questions</h3>
           <p>
-            Reading the four columns on common row-wise axes distinguishes effects
+            Reading the five completed columns on common row-wise axes distinguishes effects
             that persist across depth from effects introduced by the schedule. The
+            new fixed-rate ResNet-56 result preserves the central separation:
+            Muon and AdamW finish at 89.19% and 88.71% validation accuracy,
+            respectively, while SGD finishes at 78.73%. Muon maintains the smallest
+            quadratic scale and relative-distance errors, and its initially stronger
+            directional agreement is matched by AdamW only late in training. The
             cosine runs progressively suppress the realized optimizer displacement,
             causing the scale and relative-distance rows to approach their limiting
             values late in training even when directional alignment remains
@@ -198,9 +213,109 @@
         </div>
       </section>
 
-      <section class="experiment-section" aria-labelledby="momentum-study-title">
+      <section class="experiment-section" aria-labelledby="dataset-scaling-title">
         <header class="experiment-heading">
           <p class="section-index">Experiment 02</p>
+          <h2 id="dataset-scaling-title">Optimizer geometry under increased label-space complexity</h2>
+          <p class="experiment-aim">
+            This experiment tests whether optimizer geometry observed on CIFAR-10
+            persists when the input resolution and residual architectures are held
+            fixed but the classification problem expands from ten to one hundred
+            classes. CIFAR-100 supplies a controlled increase in label-space and
+            task complexity without introducing a new image scale, allowing changes
+            in Newton-step alignment to be attributed more directly to the objective
+            and data distribution. ResNet-20 and ResNet-44 additionally test whether
+            any dataset effect interacts with network depth.
+          </p>
+          <p class="experiment-method">
+            ResNet-20 and ResNet-44 are trained on CIFAR-100 for 100 epochs under
+            fixed and cosine-decayed learning rates, producing four paired optimizer
+            comparisons. All runs use batch size 128, four-group GroupNorm, matched
+            initialization and data order, and the same SGD, AdamW, and Muon
+            parameterization within each architecture. SGD uses learning rate 0.01,
+            AdamW uses 0.001, and Muon uses 0.02 for matrix parameters with a 0.0003
+            auxiliary AdamW path. SNE uses \(h=2\), \(d=10\), and \(m=20\).
+            Training loss is recorded every step, geometry every ten
+            steps, and validation accuracy once per epoch. Geometry and training
+            loss use SMA-100, validation remains unsmoothed, and scale error is
+            \((1-\|a\|_2/\|x^*\|_2)^2\). Each metric row shares one y-axis range
+            across all four columns.
+          </p>
+        </header>
+
+        <div class="experiment-board" tabindex="0" aria-label="CIFAR-100 optimizer comparison figures">
+          <div class="board-grid" style="--panel-columns: 4">
+            <aside class="metric-rail" aria-label="Plot rows">
+              <div class="corner-label">Metric rows</div>
+              <ol>
+                <li><span>01</span>Scale error</li>
+                <li><span>02</span>Angle error</li>
+                <li><span>03</span>Relative distance</li>
+                <li><span>04</span>Newton-step norm</li>
+                <li><span>05</span>Task validation</li>
+                <li><span>06</span>Task training</li>
+              </ol>
+            </aside>
+
+            <article class="job-column">
+              <header class="job-header">
+                <div><p>ResNet-20 · CIFAR-100</p><h3>Fixed learning rate</h3><span>SGD · AdamW · Muon</span></div>
+                <button class="expand-button" type="button" data-image="assets/plots/dataset-scaling/resnet20-fixed-lr.png" data-title="CIFAR-100 ResNet-20 optimizer comparison · fixed LR" title="Open full-resolution plot" aria-label="Open CIFAR-100 ResNet-20 fixed-LR plot">↗</button>
+              </header>
+              <img class="plot-image" src="assets/plots/dataset-scaling/resnet20-fixed-lr.png" alt="Six-row CIFAR-100 ResNet-20 optimizer comparison with fixed learning rates" loading="lazy">
+            </article>
+
+            <article class="job-column">
+              <header class="job-header">
+                <div><p>ResNet-44 · CIFAR-100</p><h3>Fixed learning rate</h3><span>SGD · AdamW · Muon</span></div>
+                <button class="expand-button" type="button" data-image="assets/plots/dataset-scaling/resnet44-fixed-lr.png" data-title="CIFAR-100 ResNet-44 optimizer comparison · fixed LR" title="Open full-resolution plot" aria-label="Open CIFAR-100 ResNet-44 fixed-LR plot">↗</button>
+              </header>
+              <img class="plot-image" src="assets/plots/dataset-scaling/resnet44-fixed-lr.png" alt="Six-row CIFAR-100 ResNet-44 optimizer comparison with fixed learning rates" loading="lazy">
+            </article>
+
+            <article class="job-column">
+              <header class="job-header">
+                <div><p>ResNet-20 · CIFAR-100</p><h3>Cosine-decay learning rate</h3><span>SGD · AdamW · Muon</span></div>
+                <button class="expand-button" type="button" data-image="assets/plots/dataset-scaling/resnet20-cosine-lr.png" data-title="CIFAR-100 ResNet-20 optimizer comparison · cosine LR" title="Open full-resolution plot" aria-label="Open CIFAR-100 ResNet-20 cosine-LR plot">↗</button>
+              </header>
+              <img class="plot-image" src="assets/plots/dataset-scaling/resnet20-cosine-lr.png" alt="Six-row CIFAR-100 ResNet-20 optimizer comparison with cosine-decay learning rates" loading="lazy">
+            </article>
+
+            <article class="job-column">
+              <header class="job-header">
+                <div><p>ResNet-44 · CIFAR-100</p><h3>Cosine-decay learning rate</h3><span>SGD · AdamW · Muon</span></div>
+                <button class="expand-button" type="button" data-image="assets/plots/dataset-scaling/resnet44-cosine-lr.png" data-title="CIFAR-100 ResNet-44 optimizer comparison · cosine LR" title="Open full-resolution plot" aria-label="Open CIFAR-100 ResNet-44 cosine-LR plot">↗</button>
+              </header>
+              <img class="plot-image" src="assets/plots/dataset-scaling/resnet44-cosine-lr.png" alt="Six-row CIFAR-100 ResNet-44 optimizer comparison with cosine-decay learning rates" loading="lazy">
+            </article>
+          </div>
+        </div>
+
+        <div class="experiment-interpretation">
+          <h3>Interpretation and open questions</h3>
+          <p>
+            Muon is the strongest task optimizer in all four columns. Its final
+            validation accuracy rises from 59.58% to 61.23% between the fixed-rate
+            ResNet-20 and ResNet-44 runs, and from 63.17% to 66.87% under cosine
+            decay. AdamW and SGD also improve with depth and scheduling, but remain
+            below Muon; their best final results are 59.11% and 60.85% in the
+            cosine ResNet-44 run. The geometric rows supply a consistent counterpart:
+            Muon realizes the largest fraction of the estimated Newton step and
+            generally has the lowest angle error, while the shared axes show cosine
+            decay pushing every optimizer's norm-sensitive errors back toward the
+            zero-update limit late in training. The principal open question is
+            whether differences from CIFAR-10 reflect the larger class count itself
+            or the smaller number of examples per class. Replication across seeds
+            and a dataset with independently varied sample count would separate
+            those factors, while learning-rate-normalized geometry could clarify how
+            much of the schedule effect is purely scalar.
+          </p>
+        </div>
+      </section>
+
+      <section class="experiment-section" aria-labelledby="momentum-study-title">
+        <header class="experiment-heading">
+          <p class="section-index">Experiment 03</p>
           <h2 id="momentum-study-title">Momentum ablations across optimizer families</h2>
           <p class="experiment-aim">
             This experiment isolates how temporal averaging changes the geometry of
@@ -293,7 +408,7 @@
 
       <section class="experiment-section" aria-labelledby="language-study-title">
         <header class="experiment-heading">
-          <p class="section-index">Experiment 03</p>
+          <p class="section-index">Experiment 04</p>
           <h2 id="language-study-title">Optimizer geometry in autoregressive language modeling</h2>
           <p class="experiment-aim">
             This experiment asks whether the optimizer-to-Newton-step relationships

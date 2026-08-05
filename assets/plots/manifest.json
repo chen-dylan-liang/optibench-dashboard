@@ -2,11 +2,85 @@
   "moving_average_type": "simple",
   "scale_error": "quadratic",
   "section_simple_window_sizes": {
+    "dataset-scaling": 100,
     "language-modeling": 50,
     "momentum-ablations": 100,
     "optimizer-comparisons": 100
   },
   "sections": {
+    "dataset-scaling": {
+      "figures": [
+        {
+          "csvs": [
+            "results/cifar100-resnet20-optimizer-sne-h2-d10-fixed-lr-20260805/source/results/cifar100-resnet20-optimizer-sne-h2-d10-fixed-lr/resnet20_sgd_cifar100-gn4.csv",
+            "results/cifar100-resnet20-optimizer-sne-h2-d10-fixed-lr-20260805/source/results/cifar100-resnet20-optimizer-sne-h2-d10-fixed-lr/resnet20_adamw_cifar100-gn4.csv",
+            "results/cifar100-resnet20-optimizer-sne-h2-d10-fixed-lr-20260805/source/results/cifar100-resnet20-optimizer-sne-h2-d10-fixed-lr/resnet20_muon_cifar100-gn4.csv"
+          ],
+          "excluded_csvs": [],
+          "job_id": "cifar100-resnet20-optimizer-sne-h2-d10-fixed-lr-20260805",
+          "output": "assets/plots/dataset-scaling/resnet20-fixed-lr.png"
+        },
+        {
+          "csvs": [
+            "results/cifar100-resnet44-optimizer-sne-h2-d10-fixed-lr-20260805/source/results/cifar100-resnet44-optimizer-sne-h2-d10-fixed-lr/resnet44_sgd_cifar100-gn4.csv",
+            "results/cifar100-resnet44-optimizer-sne-h2-d10-fixed-lr-20260805/source/results/cifar100-resnet44-optimizer-sne-h2-d10-fixed-lr/resnet44_adamw_cifar100-gn4.csv",
+            "results/cifar100-resnet44-optimizer-sne-h2-d10-fixed-lr-20260805/source/results/cifar100-resnet44-optimizer-sne-h2-d10-fixed-lr/resnet44_muon_cifar100-gn4.csv"
+          ],
+          "excluded_csvs": [],
+          "job_id": "cifar100-resnet44-optimizer-sne-h2-d10-fixed-lr-20260805",
+          "output": "assets/plots/dataset-scaling/resnet44-fixed-lr.png"
+        },
+        {
+          "csvs": [
+            "results/cifar100-resnet20-optimizer-sne-h2-d10-cosine-lr-20260805/source/results/cifar100-resnet20-optimizer-sne-h2-d10-cosine-lr/resnet20_sgd_cifar100-gn4.csv",
+            "results/cifar100-resnet20-optimizer-sne-h2-d10-cosine-lr-20260805/source/results/cifar100-resnet20-optimizer-sne-h2-d10-cosine-lr/resnet20_adamw_cifar100-gn4.csv",
+            "results/cifar100-resnet20-optimizer-sne-h2-d10-cosine-lr-20260805/source/results/cifar100-resnet20-optimizer-sne-h2-d10-cosine-lr/resnet20_muon_cifar100-gn4.csv"
+          ],
+          "excluded_csvs": [],
+          "job_id": "cifar100-resnet20-optimizer-sne-h2-d10-cosine-lr-20260805",
+          "output": "assets/plots/dataset-scaling/resnet20-cosine-lr.png"
+        },
+        {
+          "csvs": [
+            "results/cifar100-resnet44-optimizer-sne-h2-d10-cosine-lr-20260805/source/results/cifar100-resnet44-optimizer-sne-h2-d10-cosine-lr/resnet44_sgd_cifar100-gn4.csv",
+            "results/cifar100-resnet44-optimizer-sne-h2-d10-cosine-lr-20260805/source/results/cifar100-resnet44-optimizer-sne-h2-d10-cosine-lr/resnet44_adamw_cifar100-gn4.csv",
+            "results/cifar100-resnet44-optimizer-sne-h2-d10-cosine-lr-20260805/source/results/cifar100-resnet44-optimizer-sne-h2-d10-cosine-lr/resnet44_muon_cifar100-gn4.csv"
+          ],
+          "excluded_csvs": [],
+          "job_id": "cifar100-resnet44-optimizer-sne-h2-d10-cosine-lr-20260805",
+          "output": "assets/plots/dataset-scaling/resnet44-cosine-lr.png"
+        }
+      ],
+      "moving_average_type": "simple",
+      "perplexity": false,
+      "shared_y_limits": {
+        "angles": [
+          0.8227983767688274,
+          1.5516181885302067
+        ],
+        "quadratic_scale_distances": [
+          0.9487029290567808,
+          1.0024157859481346
+        ],
+        "reference_norms": [
+          4.33979170680046,
+          46.19576996445656
+        ],
+        "relative_distances": [
+          0.9927590415226066,
+          1.0003428904330558
+        ],
+        "train_losses": [
+          0.0,
+          5.257415206074715
+        ],
+        "validation_accuracies": [
+          0.005584998801350591,
+          0.7033149834722281
+        ]
+      },
+      "simple_moving_average_window_size": 100
+    },
     "language-modeling": {
       "figures": [
         {
@@ -167,6 +241,16 @@
         },
         {
           "csvs": [
+            "results/cifar10-resnet56-optimizer-sne-h2-d10-fixed-lr-20260805/source/results/cifar10-resnet56-optimizer-sne-h2-d10-fixed-lr/resnet56_sgd_cifar10-gn4.csv",
+            "results/cifar10-resnet56-optimizer-sne-h2-d10-fixed-lr-20260805/source/results/cifar10-resnet56-optimizer-sne-h2-d10-fixed-lr/resnet56_adamw_cifar10-gn4.csv",
+            "results/cifar10-resnet56-optimizer-sne-h2-d10-fixed-lr-20260805/source/results/cifar10-resnet56-optimizer-sne-h2-d10-fixed-lr/resnet56_muon_cifar10-gn4.csv"
+          ],
+          "excluded_csvs": [],
+          "job_id": "cifar10-resnet56-optimizer-sne-h2-d10-fixed-lr-20260805",
+          "output": "assets/plots/optimizer-comparisons/resnet56-fixed-lr.png"
+        },
+        {
+          "csvs": [
             "results/cifar10-resnet20-optimizer-comparison-sne-h2-d10-20260801-173942/source/results/cifar10-resnet20-sne-h2-d10/resnet20_sgd_cifar10-gn4.csv",
             "results/cifar10-resnet20-optimizer-comparison-sne-h2-d10-20260801-173942/source/results/cifar10-resnet20-sne-h2-d10/resnet20_adamw_cifar10-gn4.csv",
             "results/cifar10-resnet20-optimizer-comparison-sne-h2-d10-20260801-173942/source/results/cifar10-resnet20-sne-h2-d10/resnet20_muon_cifar10-gn4.csv"
@@ -207,7 +291,7 @@
         ],
         "train_losses": [
           0.0,
-          5.892685148293953
+          6.1852220866036225
         ],
         "validation_accuracies": [
           0.0477399967610836,

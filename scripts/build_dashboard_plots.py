@@ -75,6 +75,7 @@ class SectionSpec:
 
 def optimizer_comparison(
     *,
+    dataset: str,
     architecture: str,
     schedule: str,
     job_id: str,
@@ -84,20 +85,25 @@ def optimizer_comparison(
     display_architecture = {
         "resnet20": "ResNet-20",
         "resnet44": "ResNet-44",
+        "resnet56": "ResNet-56",
     }[architecture]
+    display_dataset = {
+        "cifar10": "CIFAR-10",
+        "cifar100": "CIFAR-100",
+    }[dataset]
     return FigureSpec(
         output=f"{architecture}-{suffix}",
         title=(
-            f"CIFAR-10 {display_architecture} optimizer comparison: "
+            f"{display_dataset} {display_architecture} optimizer comparison: "
             f"SNE h=2 d=10 {'fixed' if schedule == 'fixed' else 'cosine'} LR"
         ),
         job_id=job_id,
         result_dir=result_dir,
         labels=("SGD", "AdamW", "Muon"),
         csv_names=(
-            f"{architecture}_sgd_cifar10-gn4.csv",
-            f"{architecture}_adamw_cifar10-gn4.csv",
-            f"{architecture}_muon_cifar10-gn4.csv",
+            f"{architecture}_sgd_{dataset}-gn4.csv",
+            f"{architecture}_adamw_{dataset}-gn4.csv",
+            f"{architecture}_muon_{dataset}-gn4.csv",
         ),
     )
 
@@ -160,6 +166,7 @@ SECTIONS = (
         output_dir="assets/plots/optimizer-comparisons",
         figures=(
             optimizer_comparison(
+                dataset="cifar10",
                 architecture="resnet20",
                 schedule="fixed",
                 job_id=(
@@ -169,6 +176,7 @@ SECTIONS = (
                 result_dir="cifar10-resnet20-sne-h2-d10-fixed-lr",
             ),
             optimizer_comparison(
+                dataset="cifar10",
                 architecture="resnet44",
                 schedule="fixed",
                 job_id=(
@@ -178,6 +186,17 @@ SECTIONS = (
                 result_dir="cifar10-resnet44-sne-h2-d10-fixed-lr",
             ),
             optimizer_comparison(
+                dataset="cifar10",
+                architecture="resnet56",
+                schedule="fixed",
+                job_id=(
+                    "cifar10-resnet56-optimizer-sne-h2-d10-fixed-lr-"
+                    "20260805"
+                ),
+                result_dir="cifar10-resnet56-optimizer-sne-h2-d10-fixed-lr",
+            ),
+            optimizer_comparison(
+                dataset="cifar10",
                 architecture="resnet20",
                 schedule="cosine",
                 job_id=(
@@ -187,6 +206,7 @@ SECTIONS = (
                 result_dir="cifar10-resnet20-sne-h2-d10",
             ),
             optimizer_comparison(
+                dataset="cifar10",
                 architecture="resnet44",
                 schedule="cosine",
                 job_id=(
@@ -194,6 +214,52 @@ SECTIONS = (
                     "20260801-174500"
                 ),
                 result_dir="cifar10-resnet44-sne-h2-d10",
+            ),
+        ),
+    ),
+    SectionSpec(
+        name="dataset-scaling",
+        output_dir="assets/plots/dataset-scaling",
+        figures=(
+            optimizer_comparison(
+                dataset="cifar100",
+                architecture="resnet20",
+                schedule="fixed",
+                job_id=(
+                    "cifar100-resnet20-optimizer-sne-h2-d10-fixed-lr-"
+                    "20260805"
+                ),
+                result_dir="cifar100-resnet20-optimizer-sne-h2-d10-fixed-lr",
+            ),
+            optimizer_comparison(
+                dataset="cifar100",
+                architecture="resnet44",
+                schedule="fixed",
+                job_id=(
+                    "cifar100-resnet44-optimizer-sne-h2-d10-fixed-lr-"
+                    "20260805"
+                ),
+                result_dir="cifar100-resnet44-optimizer-sne-h2-d10-fixed-lr",
+            ),
+            optimizer_comparison(
+                dataset="cifar100",
+                architecture="resnet20",
+                schedule="cosine",
+                job_id=(
+                    "cifar100-resnet20-optimizer-sne-h2-d10-cosine-lr-"
+                    "20260805"
+                ),
+                result_dir="cifar100-resnet20-optimizer-sne-h2-d10-cosine-lr",
+            ),
+            optimizer_comparison(
+                dataset="cifar100",
+                architecture="resnet44",
+                schedule="cosine",
+                job_id=(
+                    "cifar100-resnet44-optimizer-sne-h2-d10-cosine-lr-"
+                    "20260805"
+                ),
+                result_dir="cifar100-resnet44-optimizer-sne-h2-d10-cosine-lr",
             ),
         ),
     ),
