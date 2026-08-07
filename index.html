@@ -116,11 +116,10 @@
             This experiment asks whether the optimizer-to-Newton-step relationship is
             stable as a CIFAR-10 residual network becomes deeper and whether
             conclusions drawn under a fixed learning rate survive the introduction
-            of cosine decay. ResNet-20, ResNet-44, and the completed fixed-rate
-            ResNet-56 run extend the comparison along depth, while paired schedules
-            for the first two architectures separate architectural effects from the
-            changing update scale induced by scheduling. The corresponding
-            ResNet-56 cosine control will join the panel when it finishes.
+            of cosine decay. ResNet-20, ResNet-44, ResNet-56, and ResNet-110 span
+            more than a fivefold range in depth, while paired fixed and decayed
+            schedules for every architecture separate architectural effects from
+            the changing update scale induced by scheduling.
           </p>
           <p class="experiment-method">
             Every completed column trains CIFAR-10 for 100 epochs with batch size 128
@@ -135,7 +134,7 @@
         </header>
 
         <div class="experiment-board" tabindex="0" aria-label="Optimizer comparison figures">
-          <div class="board-grid" style="--panel-columns: 5">
+          <div class="board-grid" style="--panel-columns: 8">
             <aside class="metric-rail" aria-label="Plot rows">
               <div class="corner-label">Metric rows</div>
               <ol>
@@ -174,6 +173,14 @@
 
             <article class="job-column">
               <header class="job-header">
+                <div><p>ResNet-110 · CIFAR-10</p><h3>Fixed learning rate</h3><span>SGD · AdamW · Muon</span></div>
+                <button class="expand-button" type="button" data-image="assets/plots/optimizer-comparisons/resnet110-fixed-lr.png" data-title="ResNet-110 optimizer comparison · fixed LR" title="Open full-resolution plot" aria-label="Open ResNet-110 fixed-LR plot">↗</button>
+              </header>
+              <img class="plot-image" src="assets/plots/optimizer-comparisons/resnet110-fixed-lr.png" alt="Six-row ResNet-110 optimizer comparison with fixed learning rates" loading="lazy">
+            </article>
+
+            <article class="job-column">
+              <header class="job-header">
                 <div><p>ResNet-20 · CIFAR-10</p><h3>Cosine-decay learning rate</h3><span>SGD · AdamW · Muon</span></div>
                 <button class="expand-button" type="button" data-image="assets/plots/optimizer-comparisons/resnet20-cosine-lr.png" data-title="ResNet-20 optimizer comparison · cosine LR" title="Open full-resolution plot" aria-label="Open ResNet-20 cosine-LR plot">↗</button>
               </header>
@@ -187,28 +194,52 @@
               </header>
               <img class="plot-image" src="assets/plots/optimizer-comparisons/resnet44-cosine-lr.png" alt="Six-row ResNet-44 optimizer comparison with cosine-decay learning rates" loading="lazy">
             </article>
+
+            <article class="job-column">
+              <header class="job-header">
+                <div><p>ResNet-56 · CIFAR-10</p><h3>Cosine-decay learning rate</h3><span>SGD · AdamW · Muon</span></div>
+                <button class="expand-button" type="button" data-image="assets/plots/optimizer-comparisons/resnet56-cosine-lr.png" data-title="ResNet-56 optimizer comparison · cosine LR" title="Open full-resolution plot" aria-label="Open ResNet-56 cosine-LR plot">↗</button>
+              </header>
+              <img class="plot-image" src="assets/plots/optimizer-comparisons/resnet56-cosine-lr.png" alt="Six-row ResNet-56 optimizer comparison with cosine-decay learning rates" loading="lazy">
+            </article>
+
+            <article class="job-column">
+              <header class="job-header">
+                <div><p>ResNet-110 · CIFAR-10</p><h3>Cosine-decay learning rate</h3><span>SGD · AdamW · Muon</span></div>
+                <button class="expand-button" type="button" data-image="assets/plots/optimizer-comparisons/resnet110-cosine-lr.png" data-title="ResNet-110 optimizer comparison · cosine LR" title="Open full-resolution plot" aria-label="Open ResNet-110 cosine-LR plot">↗</button>
+              </header>
+              <img class="plot-image" src="assets/plots/optimizer-comparisons/resnet110-cosine-lr.png" alt="Six-row ResNet-110 optimizer comparison with cosine-decay learning rates" loading="lazy">
+            </article>
           </div>
         </div>
 
         <div class="experiment-interpretation">
           <h3>Interpretation and open questions</h3>
           <p>
-            Reading the five completed columns on common row-wise axes distinguishes effects
-            that persist across depth from effects introduced by the schedule. The
-            new fixed-rate ResNet-56 result preserves the central separation:
-            Muon and AdamW finish at 89.19% and 88.71% validation accuracy,
-            respectively, while SGD finishes at 78.73%. Muon maintains the smallest
-            quadratic scale and relative-distance errors, and its initially stronger
-            directional agreement is matched by AdamW only late in training. The
-            cosine runs progressively suppress the realized optimizer displacement,
-            causing the scale and relative-distance rows to approach their limiting
-            values late in training even when directional alignment remains
-            informative. The fixed-rate runs therefore provide the cleaner view of
-            steady-state geometry, whereas the cosine runs reveal how that geometry
-            co-evolves with the training protocol. A remaining question is whether a
-            learning-rate-normalized displacement should be reported alongside the
-            realized update, and whether the same optimizer ranking persists for
-            wider networks, alternative normalization layers, and longer schedules.
+            Muon obtains the highest final validation accuracy in all eight
+            comparisons. Under fixed learning rates it rises from 87.57% on
+            ResNet-20 to 89.37% on ResNet-110, although most of the improvement is
+            already present by ResNet-44; AdamW closes the gap from 1.50 to 0.19
+            percentage points as depth increases, whereas fixed-rate SGD remains
+            below 79%. Cosine decay improves all four Muon results and reaches 93.27%
+            on ResNet-110. It also substantially improves SGD, showing that part of
+            the apparent optimizer ranking under a fixed rate is an interaction with
+            the training schedule rather than an architecture-only effect.
+          </p>
+          <p>
+            The geometric evidence is complementary rather than reducible to a
+            single scalar predictor. In every fixed-rate run, Muon realizes a larger
+            fraction of the estimated Newton step and has the lowest relative
+            distance, while AdamW approaches or occasionally exceeds its directional
+            alignment at greater depth. Under cosine decay, scale and relative
+            distance converge toward their zero-update limits for every optimizer;
+            notably, ResNet-110 Muon still achieves the best validation result even
+            as its late angle error rises above AdamW's. Fixed-rate runs therefore
+            give the cleaner steady-state comparison, while scheduled runs expose
+            how geometry co-evolves with update magnitude. Replication across seeds
+            is still needed, and a learning-rate-normalized displacement should be
+            tested alongside the realized update before assigning predictive status
+            to any individual geometric measurement.
           </p>
         </div>
       </section>

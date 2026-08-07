@@ -86,6 +86,7 @@ def optimizer_comparison(
         "resnet20": "ResNet-20",
         "resnet44": "ResNet-44",
         "resnet56": "ResNet-56",
+        "resnet110": "ResNet-110",
     }[architecture]
     display_dataset = {
         "cifar10": "CIFAR-10",
@@ -197,6 +198,16 @@ SECTIONS = (
             ),
             optimizer_comparison(
                 dataset="cifar10",
+                architecture="resnet110",
+                schedule="fixed",
+                job_id=(
+                    "cifar10-resnet110-optimizer-sne-h2-d10-fixed-lr-"
+                    "20260805"
+                ),
+                result_dir="cifar10-resnet110-optimizer-sne-h2-d10-fixed-lr",
+            ),
+            optimizer_comparison(
+                dataset="cifar10",
                 architecture="resnet20",
                 schedule="cosine",
                 job_id=(
@@ -214,6 +225,26 @@ SECTIONS = (
                     "20260801-174500"
                 ),
                 result_dir="cifar10-resnet44-sne-h2-d10",
+            ),
+            optimizer_comparison(
+                dataset="cifar10",
+                architecture="resnet56",
+                schedule="cosine",
+                job_id=(
+                    "cifar10-resnet56-optimizer-sne-h2-d10-cosine-lr-"
+                    "20260805"
+                ),
+                result_dir="cifar10-resnet56-optimizer-sne-h2-d10-cosine-lr",
+            ),
+            optimizer_comparison(
+                dataset="cifar10",
+                architecture="resnet110",
+                schedule="cosine",
+                job_id=(
+                    "cifar10-resnet110-optimizer-sne-h2-d10-cosine-lr-"
+                    "20260805"
+                ),
+                result_dir="cifar10-resnet110-optimizer-sne-h2-d10-cosine-lr",
             ),
         ),
     ),
